@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define GLFW_INCLUDE_ES2
+#include <GL/glew.h>
+
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 static const GLuint WIDTH = 800;
 static const GLuint HEIGHT = 600;
 static const GLchar* vertex_shader_source =
     "#version 100\n"
-    "attribute vec3 position;\n"
+    "attribute vec4 position;\n"
     "void main() {\n"
-    "   gl_Position = vec4(position, 1.0);\n"
+    "   gl_Position = vec4(position);\n"
     "}\n";
 static const GLchar* fragment_shader_source =
     "#version 100\n"
@@ -18,9 +20,9 @@ static const GLchar* fragment_shader_source =
     "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
     "}\n";
 static const GLfloat vertices[] = {
-        0.0f,  0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
+        0.0f,  0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f, 1.0f
 };
 
 GLint common_get_shader_program(const char *vertex_shader_source, const char *fragment_shader_source) {
@@ -79,6 +81,8 @@ int main(void) {
     window = glfwCreateWindow(WIDTH, HEIGHT, __FILE__, NULL, NULL);
     glfwMakeContextCurrent(window);
 
+    glewInit();
+
     printf("GL_VERSION  : %s\n", glGetString(GL_VERSION) );
     printf("GL_RENDERER : %s\n", glGetString(GL_RENDERER) );
 
@@ -91,7 +95,7 @@ int main(void) {
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+    glVertexAttribPointer(pos, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
     glEnableVertexAttribArray(pos);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
